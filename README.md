@@ -106,7 +106,8 @@ region. By default this command will look for a default AWS profile configured v
 ```bash
 newrelic-lambda integrations install \
     --nr-account-id <account id> \
-    --nr-api-key <api key>
+    --nr-api-key <api key> \
+    --enable-license-key-secret
 ```
 
 | Option | Required? | Description |
