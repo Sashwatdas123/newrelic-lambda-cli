@@ -36,37 +36,21 @@ A CLI to install the New Relic AWS Lambda integration and layers.
 
 ## Runtimes Supported
 
-* dotnetcore3.1
-* dotnet6
-* dotnet8
-* java8.al2
-* java11
-* java17
-* java21
-* nodejs16.x
-* nodejs18.x
-* nodejs20.x
-* nodejs22.x
-* provided
-* provided.al2
-* provided.al2023
-* python3.7
-* python3.8
-* python3.9
-* python3.10
-* python3.11
-* python3.12
-* python3.13
-* ruby3.2
-* ruby3.3
-* ruby3.4
+| Runtime     | Versions               |
+|-------------|------------------------|
+| Python      | `python3.7`, `python3.8`, `python3.9`, `python3.10`, `python3.11`, `python3.12`, `python3.13` |
+| Node.js     | `nodejs16.x`, `nodejs18.x`, `nodejs20.x`, `nodejs22.x` |
+| .NET   | `dotnet3.1`, `dotnet6`, `dotnet8`              |
+| Java        | `java8.al2`, `java11`, `java17`, `java21`      |
+| Provided    | `provided`, `provided.al2`, `provided.al2023`         |
+| Ruby        | `ruby3.2`, `ruby3.3`, `ruby3.4`          |
 
 **Note:** Automatic handler wrapping is only supported for Node.js, Python, Java, and Ruby. For other runtimes,
 manual function wrapping is required using the runtime specific New Relic agent.
 
 ## Requirements
 
-* Python >= 3.3 <= 3.12
+* Python >= 3.7 <= 3.13
 * Retrieve your [New relic Account ID](https://docs.newrelic.com/docs/accounts/install-new-relic/account-setup/account-id) and [User API Key](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#user-api-key)
 
 ## Recommendations
@@ -116,6 +100,9 @@ newrelic-lambda integrations install \
 | `--nr-api-key` or `-k` | Yes | Your [New Relic User API Key](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#user-api-key). Can also use the `NEW_RELIC_API_KEY` environment variable. |
 | `--linked-account-name` or `-n` | No | A label for the New Relic Linked Account. This is how this integration will appear in New Relic. Defaults to "New Relic Lambda Integration - <AWS Account ID>". |
 | `--enable-logs` or `-e` | No | Enables forwarding logs to New Relic Logging. This is disabled by default. Make sure you run `newrelic-lambda subscriptions install --function ... --filter-pattern ""` afterwards. |
+| `--enable-license-key-secret` | No | Securely manages and store your New Relic license key in `AWS Secrets Manager` |
+| `--enable-cw-ingest` | No | Enable the CloudWatch `log ingest` function |
+| `--disable-cw-ingest` | No | Disable the CloudWatch `log ingest` function |
 | `--memory-size` or `-m` | No | Memory size (in MiB) for the New Relic log ingestion function. Default to 128MB. |
 | `--nr-region` | No | The New Relic region to use for the integration. Can use the `NEW_RELIC_REGION` environment variable. Can be either `eu` or `us`. Defaults to `us`. |
 | `--timeout` or `-t` | No | Timeout (in seconds) for the New Relic log ingestion function. Defaults to 30 seconds. |
@@ -161,6 +148,7 @@ newrelic-lambda integrations update \
 | `--disable-logs` or `-d` | No | Disables forwarding logs to New Relic Logging. Make sure you run `newrelic-lambda subscriptions install --function ...` afterwards. |
 | `--enable-logs` or `-e` | No | Enables forwarding logs to New Relic Logging. Make sure you run `newrelic-lambda subscriptions install --function ... --filter-pattern ""` afterwards. |
 | `--memory-size` or `-m` | No | Memory size (in MiB) for the New Relic log ingestion function. |
+| `--enable-license-key-secret` | No | Securely manages and store your New Relic license key in `AWS Secrets Manager` |
 | `--nr-region` | No | The New Relic region to use for the integration. Can use the `NEW_RELIC_REGION` environment variable. Can be either `eu` or `us`. Defaults to `us`. |
 | `--timeout` or `-t` | No | Timeout (in seconds) for the New Relic log ingestion function. |
 | `--role-name` | No | Role name for the ingestion function. If you prefer to create and manage an IAM role for the function to assume out of band, do so and specify that role's name here. This avoids needing CAPABILITY_IAM. |
@@ -188,11 +176,16 @@ newrelic-lambda layers install \
 | `--layer-arn` or `-l` | No | Specify a specific layer version ARN to use. This is auto detected by default. |
 | `--upgrade` or `-u` | No | Permit upgrade to the latest layer version for this region and runtime. |
 | `--disable-extension` | No | Disable the [New Relic Lambda Extension](https://github.com/newrelic/newrelic-lambda-extension). |
-| `--enable-extension-function-logs` | No | Enable forwarding logs via the [New Relic Lambda Extension](https://github.com/newrelic/newrelic-lambda-extension). Disabled by default. |
+| `--enable-extension-function-logs` or `--send-function-logs` | No | Enable sending Lambda function logs via the [New Relic Lambda Extension](https://github.com/newrelic/newrelic-lambda-extension). Disabled by default. |
+| `--disable-extension-function-logs` or `--disable-function-logs` | No | Disable sending Lambda function logs via the [New Relic Lambda Extension](https://github.com/newrelic/newrelic-lambda-extension).|
+| `--send-extension-logs` | No | Enable forwarding logs via the [New Relic Lambda Extension](https://github.com/newrelic/newrelic-lambda-extension). Disabled by default. |
+| `--disable-extension-logs` | No | Disable forwarding logs via the [New Relic Lambda Extension](https://github.com/newrelic/newrelic-lambda-extension).|
 | `--aws-profile` or `-p` | No | The AWS profile to use for this command. Can also use `AWS_PROFILE`. Will also check `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables if not using AWS CLI. |
 | `--aws-region` or `-r` | No | The AWS region this function is located. Can use `AWS_DEFAULT_REGION` environment variable. Defaults to AWS session region. |
 | `--nr-api-key` or `-k` | No | Your [New Relic User API Key](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#user-api-key). Can also use the `NEW_RELIC_API_KEY` environment variable. Only used if `--enable-extension` is set and there is no New Relic license key in AWS Secrets Manager. |
 | `--nr-region` | No | The New Relic region to use for the integration. Can use the `NEW_RELIC_REGION` environment variable. Can be either `eu` or `us`. Defaults to `us`. Only used if `--enable-extension` is set and there is no New Relic license key in AWS Secrets Manager. |
+| `--nr-env-delimite` | No | Set `NR_ENV_DELIMITER` environment variable for your Lambda Function |
+| `--nr-tags` | No | Set `NR_TAGS` environment variable for your Lambda Function |
 | `--java_handler_method` or `-j` | No | For java runtimes only to specify an aws implementation method. Defaults to RequestHandler. Optional inputs are: handleRequest, handleStreamsRequest `--java_handler_method handleStreamsRequest`. |
 | `--esm` | No |  For Node.js functions using ES Modules (ESM), enable the specific ESM wrapper during installation (e.g., using the --esm flag). This sets the Lambda handler to `/opt/nodejs/node_modules/newrelic-esm-lambda-wrapper/index.handler`. |
 
