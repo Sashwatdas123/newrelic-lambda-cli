@@ -192,6 +192,13 @@ def register(group):
     metavar="<name>",
     default=None,
 )
+@click.option(
+    "--java-agent",
+    "java_agent",
+    default=False,
+    type=bool,
+    help="Java runtimes only - Use New Relic Java Agent layer (sets AWS_LAMBDA_EXEC_WRAPPER, keeps original handler)",
+)
 @click.pass_context
 def install(ctx, **kwargs):
     """Install New Relic AWS Lambda Layers"""
