@@ -191,6 +191,11 @@ def register(group):
     "NEW_RELIC_APP_NAME will be updated to the new value.",
     metavar="<name>",
     default=None,
+    "--java-agent",
+    "java_agent",
+    default=False,
+    type=bool,
+    help="Java runtimes only - Use New Relic Java Agent layer (sets AWS_LAMBDA_EXEC_WRAPPER, keeps original handler)",
 )
 @click.pass_context
 def install(ctx, **kwargs):
