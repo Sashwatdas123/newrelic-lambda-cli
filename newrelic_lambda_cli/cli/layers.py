@@ -191,6 +191,8 @@ def register(group):
     "NEW_RELIC_APP_NAME will be updated to the new value.",
     metavar="<name>",
     default=None,
+)
+@click.option(
     "--java-agent",
     "java_agent",
     default=False,
